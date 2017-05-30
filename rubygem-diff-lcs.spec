@@ -7,51 +7,33 @@
 Summary: Provide a list of changes between two sequenced collections
 Name: rubygem-%{gem_name}
 Version: 1.2.5
-Release: 2%{?dist}
+Release: 6%{?dist}
 Group: Development/Languages
-License: MIT and Perl Artistic v2 and GNU GPL v2
-URL: http://diff-lcs.rubyforge.org/
+#lib/diff/lcs.rb is Artistic or Ruby or BSD
+#lib/diff/lcs/*.rb is GPLv2+ or Artistic or Ruby or BSD
+#License.rdoc states GPLv2+ or Artistic or MIT
+License: (GPLv2+ or Artistic or MIT) and (GPLv2+ or Artistic or Ruby or BSD) and (Artistic or Ruby or BSD)
+URL: https://github.com/halostatue/diff-lcs
 Source0: https://rubygems.org/gems/%{gem_name}-%{version}.gem
-Requires: ruby(release)
-Requires: rubygems
+# Make test suite RSpec 3.x compatible.
+# https://github.com/halostatue/diff-lcs/pull/32
+Patch0: rubygem-diff-lcs-1.2.5-Fix-RSpec-3.x-compatibility.patch
 BuildRequires: rubygems-devel
 %if 0%{?need_bootstrap} < 1
 BuildRequires: rubygem(rspec)
 %endif
 BuildRequires: ruby(release)
-# the following BuildRequires are development dependencies
-# BuildRequires: rubygem(rubyforge) >= 2.0.4
-# BuildRequires: rubygem(hoe-bundler) >= 1.2
-# BuildRequires: rubygem(hoe-bundler) < 2
-# BuildRequires: rubygem(hoe-doofus) >= 1.0
-# BuildRequires: rubygem(hoe-doofus) < 2
-# BuildRequires: rubygem(hoe-gemspec2) >= 1.1
-# BuildRequires: rubygem(hoe-gemspec2) < 2
-# BuildRequires: rubygem(hoe-git) >= 1.5
-# BuildRequires: rubygem(hoe-git) < 2
-# BuildRequires: rubygem(hoe-rubygems) >= 1.0
-# BuildRequires: rubygem(hoe-rubygems) < 2
-# BuildRequires: rubygem(hoe-travis) >= 1.2
-# BuildRequires: rubygem(hoe-travis) < 2
-# BuildRequires: rubygem(rspec) >= 2.0
-# BuildRequires: rubygem(rspec) < 3
-# BuildRequires: rubygem(hoe) >= 3.7
-# BuildRequires: rubygem(hoe) < 4
 BuildArch: noarch
+%if 0%{?rhel} > 0
 Provides: rubygem(%{gem_name}) = %{version}
+%endif
 
 %description
-Diff::LCS computes the difference between two Enumerable sequences using the
-McIlroy-Hunt longest common subsequence (LCS) algorithm. It includes utilities
-to create a simple HTML diff output format and a standard diff-like tool.
-This is release 1.2.4, fixing a bug introduced after diff-lcs 1.1.3 that did
-not properly prune common sequences at the beginning of a comparison set.
-Thanks to Paul Kunysch for fixing this issue.
-Coincident with the release of diff-lcs 1.2.3, we reported an issue with
-Rubinius in 1.9 mode
-({rubinius/rubinius#2268}[https://github.com/rubinius/rubinius/issues/2268]).
-We are happy to report that this issue has been resolved.
-
+Diff::LCS is a port of Algorithm::Diff that uses the McIlroy-Hunt longest
+common subsequence (LCS) algorithm to compute intelligent differences between
+two sequenced enumerable containers. The implementation is based on Mario I.
+Wolczko's Smalltalk version (1.2, 1993) and Ned Konz's Perl version
+(Algorithm::Diff).
 
 %package doc
 Summary: Documentation for %{name}
@@ -63,50 +45,47 @@ Requires: %{name} = %{version}-%{release}
 This package contains documentation for %{name}.
 
 %prep
-gem unpack %{SOURCE0}
+%setup -q -c  -T
+%gem_install -n %{SOURCE0}
 
-%setup -q -D -T -n  %{gem_name}-%{version}
+pushd .%{gem_instdir}
+%patch0 -p1
+popd
 
-gem spec %{SOURCE0} -l --ruby > %{gem_name}.gemspec
 
 %build
-# Create the gem as gem install only works on a gem file
-gem build %{gem_name}.gemspec
 
-# %%gem_install compiles any C extensions and installs the gem into ./%%gem_dir
-# by default, so that we can move it into the buildroot in %%install
-%gem_install
 
 %install
 mkdir -p %{buildroot}%{gem_dir}
-cp -a .%{gem_dir}/* \
-        %{buildroot}%{gem_dir}/
+mkdir -p %{buildroot}/%{_bindir}
 
+cp -a .%{gem_dir}/* %{buildroot}%{gem_dir}
+cp -a .%{_bindir}/* %{buildroot}/%{_bindir}
 
-mkdir -p %{buildroot}%{_bindir}
-cp -pa .%{_bindir}/* \
-        %{buildroot}%{_bindir}/
+find %{buildroot}%{gem_instdir}/bin -type f |xargs chmod a+x
 
-find %{buildroot}%{gem_instdir}/bin -type f | xargs chmod a+x
+# Fix shebangs.
+sed -i 's|^#!.*|#!/usr/bin/ruby|' %{buildroot}%{gem_instdir}/bin/{htmldiff,ldiff}
 
 %if 0%{?need_bootstrap} < 1
 %check
 pushd .%{gem_instdir}
-rspec spec
+# https://github.com/halostatue/diff-lcs/issues/1
+sed -i '/Diff::LCS.patch(s1, diff_s1_s2).should == s2/ s/^/#/' spec/issues_spec.rb
+
+# https://github.com/halostatue/diff-lcs/issues/33
+rspec -rdiff/lcs -rdiff/lcs/hunk spec
 popd
 %endif
 
 %files
-%dir %{gem_instdir}
-%{_bindir}/htmldiff
 %{_bindir}/ldiff
-%{gem_instdir}/.autotest
-%exclude %{gem_instdir}/.gemtest
-%exclude %{gem_instdir}/.hoerc
-%{gem_instdir}/.rspec
-%exclude %{gem_instdir}/.travis.yml
-%{gem_instdir}/Manifest.txt
-%{gem_instdir}/autotest
+%{_bindir}/htmldiff
+%dir %{gem_instdir}
+%exclude %{gem_instdir}/.*
+%doc %{gem_instdir}/License.rdoc
+%doc %{gem_instdir}/docs
 %{gem_instdir}/bin
 %{gem_libdir}
 %exclude %{gem_cache}
@@ -115,20 +94,42 @@ popd
 %files doc
 %doc %{gem_docdir}
 %doc %{gem_instdir}/Contributing.rdoc
-%{gem_instdir}/Gemfile
 %doc %{gem_instdir}/History.rdoc
-%doc %{gem_instdir}/License.rdoc
-%doc %{gem_instdir}/README.rdoc
+%doc %{gem_instdir}/Manifest.txt
+%{gem_instdir}/Gemfile
 %{gem_instdir}/Rakefile
-%doc %{gem_instdir}/docs
+%doc %{gem_instdir}/README.rdoc
+%{gem_instdir}/autotest
 %{gem_instdir}/spec
 
-%changelog
-* Wed Sep 28 2016 Rich Megginson <rmeggins@redhat.com> - 1.2.5-2
-- bump rel to rebuild for rhlog-buildrequires
 
-* Fri Aug 26 2016 Rich Megginson <rmeggins@redhat.com> - 1.2.5-1
-- Update to 1.2.5
+%changelog
+* Tue Dec 20 2016 Martin Mágr <mmagr@redhat.com> - 1.2.5-6
+- Added Provides for RHEL releases
+
+* Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 1.2.5-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
+* Fri Aug 28 2015 Josef Stribny <jstribny@redhat.com> - 1.2.5-4
+- Fix FTBFS: change the way the specs are run
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.5-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Thu Feb 19 2015 Vít Ondruch <vondruch@redhat.com> - 1.2.5-2
+- Fix test suite for RSpec 3.x comaptibility.
+
+* Tue Jul 01 2014 Julian Dunn <jdunn@aquezada.com> - 1.2.5-1
+- Update to 1.2.5 (bz#902240)
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.3-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Feb 06 2014 Josef Stribny <jstribny@redhat.com> - 1.1.3-4
+- Fix licensing
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.3-3.2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
 * Wed Feb 20 2013 Vít Ondruch <vondruch@redhat.com> - 1.1.3-3
 - Rebuild for https://fedoraproject.org/wiki/Features/Ruby_2.0.0
