@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9aa7fdbe_b592889d",
+        "filename": "rubygem-diff-lcs.spec",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 390
+      },
+      "writtenOn": "2017-05-30T10:01:35Z",
+      "side": 1,
+      "message": "Why only on rhel?",
+      "revId": "ab7d0717b0c3fdc3ba5b80ab00221bd7da17a9e2",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa7fdbe_15e9941a",
+        "filename": "rubygem-diff-lcs.spec",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 390
+      },
+      "writtenOn": "2017-05-30T10:01:35Z",
+      "side": 1,
+      "message": "this should be in %build.\nI think Richard version on this aspect was formally more correct",
+      "revId": "ab7d0717b0c3fdc3ba5b80ab00221bd7da17a9e2",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa7fdbe_d5e62c44",
+        "filename": "rubygem-diff-lcs.spec",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 390
+      },
+      "writtenOn": "2017-05-30T10:01:35Z",
+      "side": 1,
+      "message": "this should be %license not %doc",
+      "revId": "ab7d0717b0c3fdc3ba5b80ab00221bd7da17a9e2",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa7fdbe_f5e33031",
+        "filename": "rubygem-diff-lcs.spec",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 390
+      },
+      "writtenOn": "2017-05-30T10:01:35Z",
+      "side": 1,
+      "message": "missing license file, should be included in all sub packages",
+      "revId": "ab7d0717b0c3fdc3ba5b80ab00221bd7da17a9e2",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
+      "unresolved": false
+    }
+  ]
+}
