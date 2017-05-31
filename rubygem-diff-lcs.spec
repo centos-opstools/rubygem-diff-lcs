@@ -7,7 +7,7 @@
 Summary: Provide a list of changes between two sequenced collections
 Name: rubygem-%{gem_name}
 Version: 1.2.5
-Release: 6%{?dist}
+Release: 7%{?dist}
 Group: Development/Languages
 #lib/diff/lcs.rb is Artistic or Ruby or BSD
 #lib/diff/lcs/*.rb is GPLv2+ or Artistic or Ruby or BSD
@@ -45,15 +45,19 @@ Requires: %{name} = %{version}-%{release}
 This package contains documentation for %{name}.
 
 %prep
-%setup -q -c  -T
-%gem_install -n %{SOURCE0}
-
-pushd .%{gem_instdir}
+gem unpack %{SOURCE0}
+%setup -q -D -T -n  %{gem_name}-%{version}
+gem spec %{SOURCE0} -l --ruby > %{gem_name}.gemspec
 %patch0 -p1
-popd
-
 
 %build
+# Create the gem as gem install only works on a gem file
+gem build %{gem_name}.gemspec
+
+# %%gem_install compiles any C extensions and installs the gem into ./%%gem_dir
+# by default, so that we can move it into the buildroot in %%install
+%gem_install
+
 
 
 %install
@@ -84,7 +88,7 @@ popd
 %{_bindir}/htmldiff
 %dir %{gem_instdir}
 %exclude %{gem_instdir}/.*
-%doc %{gem_instdir}/License.rdoc
+%license %{gem_instdir}/License.rdoc
 %doc %{gem_instdir}/docs
 %{gem_instdir}/bin
 %{gem_libdir}
@@ -92,6 +96,7 @@ popd
 %{gem_spec}
 
 %files doc
+%license %{gem_instdir}/License.rdoc
 %doc %{gem_docdir}
 %doc %{gem_instdir}/Contributing.rdoc
 %doc %{gem_instdir}/History.rdoc
@@ -104,6 +109,12 @@ popd
 
 
 %changelog
+* Wed May 31 2017 Sandro Bonazzola <sbonazzo@redhat.com> - 1.2.5-7
+- moving build process to build section
+- patch source code before the build happens
+- use license macro
+- add missing license file to doc subpackage
+
 * Tue Dec 20 2016 Martin Mágr <mmagr@redhat.com> - 1.2.5-6
 - Added Provides for RHEL releases
 
