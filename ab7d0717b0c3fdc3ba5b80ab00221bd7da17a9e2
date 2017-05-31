@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9aa7fdbe_03e4fe39",
+        "filename": "rubygem-diff-lcs.spec",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 314
+      },
+      "writtenOn": "2017-05-31T08:44:17Z",
+      "side": 1,
+      "message": "I believe that %{?rhel} \u003d\u003d 1 for CentOS. But if you are asking for Fedora, then the answer is that Fedora does not need explicitly defined meta-provide and it just works(tm).",
+      "parentUuid": "9aa7fdbe_b592889d",
+      "revId": "ab7d0717b0c3fdc3ba5b80ab00221bd7da17a9e2",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9aa7fdbe_15e9941a",
         "filename": "rubygem-diff-lcs.spec",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2017-05-30T10:01:35Z",
       "side": 1,
       "message": "this should be in %build.\nI think Richard version on this aspect was formally more correct",
+      "revId": "ab7d0717b0c3fdc3ba5b80ab00221bd7da17a9e2",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa7fdbe_23d02253",
+        "filename": "rubygem-diff-lcs.spec",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 314
+      },
+      "writtenOn": "2017-05-31T08:44:17Z",
+      "side": 1,
+      "message": "Sure, feel free to fix this.",
+      "parentUuid": "9aa7fdbe_15e9941a",
       "revId": "ab7d0717b0c3fdc3ba5b80ab00221bd7da17a9e2",
       "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
       "unresolved": false
