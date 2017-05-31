@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "9aa7fdbe_c322f600",
+        "filename": "rubygem-diff-lcs.spec",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 390
+      },
+      "writtenOn": "2017-05-31T11:41:48Z",
+      "side": 1,
+      "message": "Ok, make sense then.",
+      "parentUuid": "9aa7fdbe_03e4fe39",
+      "revId": "ab7d0717b0c3fdc3ba5b80ab00221bd7da17a9e2",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9aa7fdbe_15e9941a",
         "filename": "rubygem-diff-lcs.spec",
         "patchSetId": 1
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "Sure, feel free to fix this.",
       "parentUuid": "9aa7fdbe_15e9941a",
+      "revId": "ab7d0717b0c3fdc3ba5b80ab00221bd7da17a9e2",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa7fdbe_e31ffab5",
+        "filename": "rubygem-diff-lcs.spec",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 390
+      },
+      "writtenOn": "2017-05-31T11:41:48Z",
+      "side": 1,
+      "message": "Ok, I\u0027ll try.",
+      "parentUuid": "9aa7fdbe_23d02253",
       "revId": "ab7d0717b0c3fdc3ba5b80ab00221bd7da17a9e2",
       "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
       "unresolved": false
